@@ -105,13 +105,46 @@ zabbix_export:
               tags:
                 - tag: component
                   value: 'flood ping'
+          graph_prototypes:
+            - uuid: e7cd1a17aea24754bbfaff5f3152cc3c
+              name: '{#SCRIPTNAME} ICMP Flood Rx-Tx'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: FILLED_REGION
+                  color: 66BB6A
+                  calc_fnc: ALL
+                  item:
+                    host: 'Mikrotik SNMP script data'
+                    key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.sent]'
+                - sortorder: '1'
+                  color: FF4000
+                  calc_fnc: ALL
+                  item:
+                    host: 'Mikrotik SNMP script data'
+                    key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.received]'
+            - uuid: 0caac45231dc437090cbbe56396428b5
+              name: '{#SCRIPTNAME} ICMP Response time'
+              ymin_type_1: FIXED
+              graph_items:
+                - color: 2774A4
+                  calc_fnc: ALL
+                  item:
+                    host: 'Mikrotik SNMP script data'
+                    key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.minrtt]'
+                - sortorder: '1'
+                  color: F63100
+                  calc_fnc: ALL
+                  item:
+                    host: 'Mikrotik SNMP script data'
+                    key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.maxrtt]'
+                - sortorder: '2'
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Mikrotik SNMP script data'
+                    key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.avgrtt]'
           preprocessing:
             - type: STR_REPLACE
               parameters:
                 - ' '
                 - _
-      tags:
-        - tag: type
-          value: snmp
-      macros:
-        - macro: '{$SNMP_MIKROTIK_NUM_SCRIPT}'
