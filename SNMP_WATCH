@@ -1,0 +1,16 @@
+# This script outputs average ping time in milliseconds (integer, no fractions)
+
+# parameters
+:local target "10.6.1.222"
+# timeout must be a string with units (default MikroTik value is 1s)
+:local timeout "1000ms"
+# packet size in bytes (default MikroTik value is 64)
+:local size 64
+:local count 5
+
+# execute flood-ping with as-value
+:local result [/tool flood-ping address=$target count=$count size=$size timeout=$timeout as-value]
+
+
+# output as JSON
+:put ("{\"avgrtt\":\"" . ($result->"avg-rtt") . "\",\"maxrtt\":\"" . ($result->"max-rtt") . "\",\"minrtt\":\"" . ($result->"min-rtt") . "\",\"sent\":\"" . ($result->"sent") . "\",\"received\":\"" . ($result->"received") . "\"}")
