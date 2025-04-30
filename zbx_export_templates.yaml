@@ -1,0 +1,117 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: 8429e1a626af49a892cd608821d05815
+      template: 'Mikrotik SNMP script data'
+      name: 'Mikrotik SNMP script data'
+      groups:
+        - name: Templates
+      discovery_rules:
+        - uuid: 655d76e3e5654f8ca4a7573901b8311a
+          name: 'Mikrotk script'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SCRIPTNAME},1.3.6.1.4.1.14988.1.1.8.1.1.2]'
+          key: mikrotik.snmp.script
+          delay: 5m
+          filter:
+            conditions:
+              - macro: '{#SCRIPTNAME}'
+                value: '^SNMP_WATCH.*$'
+                formulaid: A
+          item_prototypes:
+            - uuid: 0d5d5812f2694001adfe44ec53ffcbbc
+              name: 'avg rtt'
+              type: DEPENDENT
+              key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.avgrtt]'
+              delay: '0'
+              units: ms
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - $.avgrtt
+              master_item:
+                key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data]'
+              tags:
+                - tag: component
+                  value: 'flood ping'
+            - uuid: 077f2ae90fb84a7d82343861ba84926a
+              name: 'max rtt'
+              type: DEPENDENT
+              key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.maxrtt]'
+              delay: '0'
+              units: ms
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - $.maxrtt
+              master_item:
+                key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data]'
+              tags:
+                - tag: component
+                  value: 'flood ping'
+            - uuid: 2c3048084c0a49f3b33c33b6c753b1a0
+              name: 'min rtt'
+              type: DEPENDENT
+              key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.minrtt]'
+              delay: '0'
+              units: ms
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - $.minrtt
+              master_item:
+                key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data]'
+              tags:
+                - tag: component
+                  value: 'flood ping'
+            - uuid: d749bfff7bed49d585c6bfec429403f6
+              name: received
+              type: DEPENDENT
+              key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.received]'
+              delay: '0'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - $.received
+              master_item:
+                key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data]'
+              tags:
+                - tag: component
+                  value: 'flood ping'
+            - uuid: c05b4856c2824a69bf7afbbaedaa66f2
+              name: sent
+              type: DEPENDENT
+              key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data.sent]'
+              delay: '0'
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - $.sent
+              master_item:
+                key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data]'
+              tags:
+                - tag: component
+                  value: 'flood ping'
+            - uuid: d165adcc094c44b4ad63384fa7a83cb3
+              name: 'FLOOD PING DATA {#SCRIPTNAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.14988.1.1.18.1.1.2.{#SNMPINDEX}'
+              key: 'mikrotik.snmp.script.floodping.[{#SCRIPTNAME}.data]'
+              value_type: TEXT
+              trends: '0'
+              tags:
+                - tag: component
+                  value: 'flood ping'
+          preprocessing:
+            - type: STR_REPLACE
+              parameters:
+                - ' '
+                - _
+      tags:
+        - tag: type
+          value: snmp
+      macros:
+        - macro: '{$SNMP_MIKROTIK_NUM_SCRIPT}'
