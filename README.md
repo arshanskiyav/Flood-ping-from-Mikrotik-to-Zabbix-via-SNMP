@@ -5,7 +5,7 @@ To get icmp response time between several Mikrotiks and one host in the form of 
 
 To use it you need to:
 - create a script on your Mikrotik with name that starts with SNMP_WATCH
-- add a community with write access
+- add a community with RW access
 - add a host in your Zabbix with an SNMP interface
 - attache a template from this repository
 
